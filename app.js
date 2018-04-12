@@ -11,7 +11,7 @@ var app = express();
 // view engine setup
 app.engine('mustache', mustacheExpress())
 app.set('view engine', 'mustache')
-app.set('views', __dirname + '/views')
+app.set('views', path.join(__dirname, '/views'))
 
 app.use(logger('dev'));
 app.use(express.json());
