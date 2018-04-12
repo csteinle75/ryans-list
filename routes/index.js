@@ -11,17 +11,24 @@ router.get('/', function(req, res, next) {
 	FROM
 		categories
 	`
-
-	conn.connect()
-  	conn.query(sql, (err, results, fields) => {
-  		console.log(results)
-  		let data = {
-  			title: 'blah',
-  			categories: results
+	let data = {
+  			title: 'blah'
   		}
-  		res.render('home', data)
+
+  	conn.query(sql, (err, results, fields) => {
+  		data.categories = results.filter(result => result.parent_id === null)
+  		data.categories.map( cat => {
+  			let subcat = results.filter( result => {
+  				if (result.parent_id === cat.id){
+  					return result
+  				}
+  			})
+  			cat.subcategories = subcat
+  		})
+  		// console.log(data.categories)
+  		res.json(data)
+  		// res.render('home', data)
   	})
-  	conn.end()
 });
 
 module.exports = router;
