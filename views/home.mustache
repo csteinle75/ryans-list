@@ -3,11 +3,27 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 </head>
 <body>
-	<h1>Ryan's List</h1>
-	{{#categories}}
-		<h3>{{title}}</h3>
-	{{/categories}}
+	<div class="pageContainer">
+	<h1 id="pageName">Ryan's List</h1>
+		<div class="mainContent flex">
+		{{#categories}}
+			<div class="categoryContainer">
+				<h2 class="mainCat"><a href="category/{{slug}}">{{title}}</a></h2>
+				<ul>
+				{{#subcategories}}
+					<li class="subCat"><a href="category/{{slug}}">{{title}}</a></li>
+				{{/subcategories}}
+				</ul>
+			</div>
+		{{/categories}}
+		</div>
+		<a href="add-listing">add listing</a>
+	</div>
+	<footer>
+		<div>footer</div>
+	</footer>
 </body>
 </html>

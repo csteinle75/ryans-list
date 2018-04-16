@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{{title}}</title>
+</head>
+<body>
+	<form action="submit-listing" method="post" enctype="multipart/form-data">
+		<input type="text" name="title" id="newTitle" placeholder="title">
+		<textarea name="description" id="newDescription" placeholder="description"></textarea>
+		<select name="category">
+			{{#categories}}
+			<optgroup label="{{title}}">
+				{{#subcategories}}
+					<option value="{{id}}">{{title}}</option>
+				{{/subcategories}}
+			</optgroup>
+			{{/categories}}
+		</select>
+		<input type="file" name="listingImg" formenctype="multipart/form-data"/>
+		<button type="submit">Add Listing</button>
+	</form>
+	<a href="/">Home</a>
+</body>
+</html>
