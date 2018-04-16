@@ -8,6 +8,8 @@ var upload = multer({
 	dest: path.join(__dirname, '../public/uploads'),
 })
 
+
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
 	const sql = `
@@ -37,16 +39,15 @@ router.get('/', function(req, res, next) {
 
 //NOT YET DONE, FINISH NEXT
 router.get('/category/:category', (req, res, next) =>{
-	// const sql = `
-	// 	SELECT
-	// 		l.*,
-	// 		c.*
-	// 	FROM
-	// 		listings l
-	// 	LEFT JOIN categories c
-	// 		ON l.category_id = c.id
-	// 	WHERE c.slug LIKE '${req.params.category}' 
-	// `
+	const sql = `
+		SELECT
+			l.*
+		FROM
+			listings l
+		LEFT JOIN categories c
+			ON l.category_id = c.id
+		WHERE c.slug LIKE '${req.params.category}' 
+	 `
 
 	// const sql = `
 	// 	SELECT
@@ -55,12 +56,6 @@ router.get('/category/:category', (req, res, next) =>{
 	// 		listings
 	// `
 
-	// Kevin J sql:
-	// c.title,
-	// c.slug,
-	// l.description,
-	// l.content
-
 
 
 	let data = {
@@ -68,11 +63,15 @@ router.get('/category/:category', (req, res, next) =>{
 		category: req.params.category,
 	}
 	
-	// conn.query(sql, (err, results, fields) => {
-	// 		console.log(results)
-	// })
-	res.render('category', data)
+	conn.query(sql, (err, results, fields) => {
+			data.listings = results.map(result => {return {...result}})
+			console.log('data listing', data.listings)
+			res.render('category', data)
+	})
+	
 })
+
+
 
 router.get('/view-listing/:listingid', (req, res, next) =>{
 	const sql = `
@@ -94,7 +93,6 @@ router.get('/view-listing/:listingid', (req, res, next) =>{
 	let data = {}
 
 	conn.query(sql, (err, results, fields) =>{
-		console.log(results)
 		data.title = results[0].title
 		data.id = results[0].listing_id
 		data.category = results[0].title
@@ -102,11 +100,11 @@ router.get('/view-listing/:listingid', (req, res, next) =>{
 		data.description = results[0].description
 		data.image = results[0].image_path
 		data.slug = results[0].slug
-
-		console.log('data:', data)
 		res.render('view-listing', data)
 	})
 })
+
+
 
 router.get('/add-listing', (req, res, next) =>{
 

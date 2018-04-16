@@ -6,5 +6,11 @@
 </head>
 <body>
 	<h1>Category: {{category}}</h1>
+	<ul>
+	{{#listings}}
+		<li><a href="/view-listing/{{id}}">{{title}}</a></li>
+	{{/listings}}
+	</ul>
+	<a href="/">Home</a>
 </body>
 </html>
