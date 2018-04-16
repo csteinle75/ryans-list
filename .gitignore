@@ -2,3 +2,4 @@ node_modules
 DO-NOT-UPLOAD.txt
 config
 .DS_Store
+uploads

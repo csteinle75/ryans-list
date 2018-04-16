@@ -30,12 +30,12 @@ router.get('/', function(req, res, next) {
   			})
   			cat.subcategories = subcat
   		})
-  		// console.log(data.categories)
-  		// res.json(data)
   		res.render('home', data)
   	})
 });
 
+
+//NOT YET DONE, FINISH NEXT
 router.get('/category/:category', (req, res, next) =>{
 	// const sql = `
 	// 	SELECT
@@ -64,7 +64,7 @@ router.get('/category/:category', (req, res, next) =>{
 
 
 	let data = {
-		title: 'test', 
+		title: req.params.category, 
 		category: req.params.category,
 	}
 	
@@ -74,6 +74,39 @@ router.get('/category/:category', (req, res, next) =>{
 	res.render('category', data)
 })
 
+router.get('/view-listing/:listingid', (req, res, next) =>{
+	const sql = `
+	SELECT
+		l.*,
+		i.*,
+		c.title, c.slug
+	FROM 
+		listings l
+	LEFT JOIN images i
+		ON l.id = i.listing_id
+	LEFT JOIN categories c
+		ON l.category_id = c.id
+	WHERE
+		l.id LIKE '${req.params.listingid}'
+
+	`
+
+	let data = {}
+
+	conn.query(sql, (err, results, fields) =>{
+		console.log(results)
+		data.title = results[0].title
+		data.id = results[0].listing_id
+		data.category = results[0].title
+		data.catid = results[0].category_id
+		data.description = results[0].description
+		data.image = results[0].image_path
+		data.slug = results[0].slug
+
+		console.log('data:', data)
+		res.render('view-listing', data)
+	})
+})
 
 router.get('/add-listing', (req, res, next) =>{
 
@@ -101,6 +134,7 @@ router.get('/add-listing', (req, res, next) =>{
   	})
 })
 
+
 router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	console.log('request:', req.body)
 	console.log('file', req.file)
@@ -117,9 +151,22 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	`
 
 	conn.query(sql, [title, description, category], (err, results, fields) =>{
-		res.redirect('/add-listing')
+		let listing_id = results.insertId
+		const image_path = '/uploads/' + req.file.filename
+		const imgSql = `
+		INSERT INTO
+			images (listing_id, image_path)
+			VALUES(?,?)
+		`
+		conn.query(imgSql, [listing_id, image_path], (error, queryres, queryfields) =>{
+			data = {
+				title: 'test title'
+			}
+			res.redirect('/add-listing')
+		})
 	})
-
 })
+
+
 
 module.exports = router;

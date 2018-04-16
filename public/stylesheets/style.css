@@ -36,3 +36,12 @@ ul{
 footer{
 	border-top: 1px solid black;
 }
+
+
+
+/*view-listing*/
+
+.listingPic {
+	max-height: 500px;
+	max-width: 500px;
+}
