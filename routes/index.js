@@ -18,6 +18,7 @@ router.get('/', function(req, res, next) {
 	FROM
 		categories
 	`
+	
 	let data = {
   			title: 'Ryan\'s List'
   		}
@@ -37,7 +38,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-//NOT YET DONE, FINISH NEXT
+//does not display listings when main categories selected
 router.get('/category/:category', (req, res, next) =>{
 	const sql = `
 		SELECT
@@ -49,15 +50,6 @@ router.get('/category/:category', (req, res, next) =>{
 		WHERE c.slug LIKE '${req.params.category}' 
 	 `
 
-	// const sql = `
-	// 	SELECT
-	// 		*
-	// 	FROM 
-	// 		listings
-	// `
-
-
-
 	let data = {
 		title: req.params.category, 
 		category: req.params.category,
@@ -65,7 +57,8 @@ router.get('/category/:category', (req, res, next) =>{
 	
 	conn.query(sql, (err, results, fields) => {
 			data.listings = results.map(result => {return {...result}})
-			console.log('data listing', data.listings)
+			console.log('data listing: ', data.listings)
+			console.log(results)
 			res.render('category', data)
 	})
 	
@@ -133,6 +126,7 @@ router.get('/add-listing', (req, res, next) =>{
 })
 
 
+
 router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	console.log('request:', req.body)
 	console.log('file', req.file)
@@ -140,7 +134,6 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	const description = req.body.description
 	const category = req.body.category
 	const listingImg = req.body.listingImg
-
 
 	const sql  = `
 	INSERT INTO
@@ -156,6 +149,7 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 			images (listing_id, image_path)
 			VALUES(?,?)
 		`
+
 		conn.query(imgSql, [listing_id, image_path], (error, queryres, queryfields) =>{
 			data = {
 				title: 'test title'
