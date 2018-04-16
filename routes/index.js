@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 	FROM
 		categories
 	`
-	
+
 	let data = {
   			title: 'Ryan\'s List'
   		}
@@ -40,28 +40,59 @@ router.get('/', function(req, res, next) {
 
 //does not display listings when main categories selected
 router.get('/category/:category', (req, res, next) =>{
-	const sql = `
-		SELECT
-			l.*
-		FROM
-			listings l
+	// const sql = `
+	// 	SELECT
+	// 		l.*
+	// 	FROM
+	// 		listings l
+	// 	LEFT JOIN categories c
+	// 		ON l.category_id = c.id
+	// 	WHERE c.slug LIKE '${req.params.category}' 
+	//  `
+
+	// let data = {
+	// 	title: req.params.category, 
+	// 	category: req.params.category,
+	// }
+	
+	// conn.query(sql, (err, results, fields) => {
+	// 		data.listings = results.map(result => {return {...result}})
+	// 		console.log('data listing: ', data.listings)
+	// 		console.log(results)
+	// 		res.render('category', data)
+	// })
+	
+	const queryid = `
+	SELECT id, title as catname
+	FROM categories
+	WHERE slug like ?
+	`
+
+	conn.query(queryid, [req.params.category], (err, results, fields) =>{
+		console.log('category id:',results[0])
+		const catId = results[0].id
+		const catName = results[0].catname
+
+		const querylistings = `
+		SELECT l.*
+		FROM listings l
 		LEFT JOIN categories c
 			ON l.category_id = c.id
-		WHERE c.slug LIKE '${req.params.category}' 
-	 `
+		WHERE l.category_id = ? OR c.parent_id = ?
+		`
 
-	let data = {
-		title: req.params.category, 
-		category: req.params.category,
-	}
-	
-	conn.query(sql, (err, results, fields) => {
-			data.listings = results.map(result => {return {...result}})
-			console.log('data listing: ', data.listings)
-			console.log(results)
+		conn.query(querylistings, [catId, catId], (err2, results2, fields2) =>{
+			console.log(results2.map(result => {return {...result}}))
+
+			data = {
+				title: catName,
+				listings: results2.map(result => {return{...result}})
+			}
+
 			res.render('category', data)
+		})
 	})
-	
+
 })
 
 
@@ -71,7 +102,7 @@ router.get('/view-listing/:listingid', (req, res, next) =>{
 	SELECT
 		l.*,
 		i.*,
-		c.title, c.slug
+		c.title as catname, c.slug
 	FROM 
 		listings l
 	LEFT JOIN images i
@@ -88,7 +119,7 @@ router.get('/view-listing/:listingid', (req, res, next) =>{
 	conn.query(sql, (err, results, fields) =>{
 		data.title = results[0].title
 		data.id = results[0].listing_id
-		data.category = results[0].title
+		data.category = results[0].catname
 		data.catid = results[0].category_id
 		data.description = results[0].description
 		data.image = results[0].image_path
@@ -134,6 +165,10 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	const description = req.body.description
 	const category = req.body.category
 	const listingImg = req.body.listingImg
+	let imgpath
+	if (!req.file === undefined){
+		imgpath = '/uploads/' + req.file.filename
+	} else {imgpath = 'http://placehold.it/300/300'}
 
 	const sql  = `
 	INSERT INTO
@@ -143,14 +178,13 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 
 	conn.query(sql, [title, description, category], (err, results, fields) =>{
 		let listing_id = results.insertId
-		const image_path = '/uploads/' + req.file.filename
 		const imgSql = `
 		INSERT INTO
 			images (listing_id, image_path)
 			VALUES(?,?)
 		`
-
-		conn.query(imgSql, [listing_id, image_path], (error, queryres, queryfields) =>{
+		console.log(imgpath)
+		conn.query(imgSql, [listing_id, imgpath], (error, queryres, queryfields) =>{
 			data = {
 				title: 'test title'
 			}
