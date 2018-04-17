@@ -3,13 +3,19 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css" />
 </head>
 <body>
-	<h1>{{title}}</h1>
-	<img src="{{image}}" class="listingPic" />
-	<p>{{description}}</p>
-	<a href="/category/{{slug}}">Back to {{category}}</a>
-	<a href="/">Home</a>
+	<h1 class="pageName">Category: {{category}}</h1>
+	<div class="pageContainer">
+		<h1>{{title}}</h1>
+		<img src="{{image}}" class="listingPic" />
+		<p class="listingDesc">{{description}}</p>
+		<div class="listingNav">
+			<a href="/category/{{slug}}"><h2>Back to {{category}}</h2></a>
+			<a href="/"><h2>Return Home</h2></a>
+		</div>
+	</div>
 </body>
 </html>

@@ -39,28 +39,7 @@ router.get('/', function(req, res, next) {
 
 
 //does not display listings when main categories selected
-router.get('/category/:category', (req, res, next) =>{
-	// const sql = `
-	// 	SELECT
-	// 		l.*
-	// 	FROM
-	// 		listings l
-	// 	LEFT JOIN categories c
-	// 		ON l.category_id = c.id
-	// 	WHERE c.slug LIKE '${req.params.category}' 
-	//  `
-
-	// let data = {
-	// 	title: req.params.category, 
-	// 	category: req.params.category,
-	// }
-	
-	// conn.query(sql, (err, results, fields) => {
-	// 		data.listings = results.map(result => {return {...result}})
-	// 		console.log('data listing: ', data.listings)
-	// 		console.log(results)
-	// 		res.render('category', data)
-	// })
+router.get('/category/:category/:view?', (req, res, next) =>{
 	
 	const queryid = `
 	SELECT id, title as catname
@@ -74,11 +53,15 @@ router.get('/category/:category', (req, res, next) =>{
 		const catName = results[0].catname
 
 		const querylistings = `
-		SELECT l.*
+		SELECT l.*, i.image_path
 		FROM listings l
 		LEFT JOIN categories c
 			ON l.category_id = c.id
+		LEFT JOIN images i
+			ON l.id = i.listing_id
 		WHERE l.category_id = ? OR c.parent_id = ?
+		ORDER BY 
+			l.id DESC
 		`
 
 		conn.query(querylistings, [catId, catId], (err2, results2, fields2) =>{
@@ -86,7 +69,9 @@ router.get('/category/:category', (req, res, next) =>{
 
 			data = {
 				title: catName,
-				listings: results2.map(result => {return{...result}})
+				listings: results2.map(result => {return{...result}}),
+				slug: req.params.category,
+				view: req.params.view
 			}
 
 			res.render('category', data)
@@ -159,12 +144,18 @@ router.get('/add-listing', (req, res, next) =>{
 
 
 router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
-	console.log('request:', req.body)
+	// console.log('request:', req.body)
 	console.log('file', req.file)
 	const title = req.body.title
 	const description = req.body.description
 	const category = req.body.category
 	const listingImg = req.body.listingImg
+	const zipcode = req.body.zipcode
+	let price
+	if (Number.isNaN(parseFloat(req.body.price))){
+		price = 0
+	} else {price = parseFloat(req.body.price)}
+
 	let imgpath
 	if (!req.file === undefined){
 		imgpath = '/uploads/' + req.file.filename
@@ -172,18 +163,19 @@ router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 
 	const sql  = `
 	INSERT INTO
-		listings (title, description, category_id)
-		VALUES (?, ?, ?)
+		listings (title, description, category_id, price, zipcode)
+		VALUES (?, ?, ?, ?, ?)
 	`
 
-	conn.query(sql, [title, description, category], (err, results, fields) =>{
+	conn.query(sql, [title, description, category, price, zipcode], (err, results, fields) =>{
+		console.log(results)
 		let listing_id = results.insertId
 		const imgSql = `
 		INSERT INTO
 			images (listing_id, image_path)
 			VALUES(?,?)
 		`
-		console.log(imgpath)
+		console.log('imgpath:', imgpath)
 		conn.query(imgSql, [listing_id, imgpath], (error, queryres, queryfields) =>{
 			data = {
 				title: 'test title'

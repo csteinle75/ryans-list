@@ -3,15 +3,34 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
 </head>
 <body>
-	<h1>Category: {{category}}</h1>
-	<ul>
-	{{#listings}}
-		<li><a href="/view-listing/{{id}}">{{title}}</a></li>
-	{{/listings}}
-	</ul>
-	<a href="/">Home</a>
+	<h1 class="pageName">Category: {{title}}</h1>
+	<div class="pageContainer">
+		<div id="views">
+			<h2>View As:</h2>
+			<ul>
+				<a href="/category/{{slug}}/list"><li>List</li></a>
+				<a href="/category/{{slug}}/thumbnail"><li>Thumbnails</li></a>
+				<a href="/category/{{slug}}/grid"><li>Grid</li></a>
+			</ul>
+		</div>
+		
+		<div class="{{view}}">
+			<ul class="cat-ul">
+				{{#listings}}
+					<li>
+						<a href="/view-listing/{{id}}" class="listLink">
+							<img src="{{image_path}}" class="preview">
+							<span>{{title}}</span>
+						</a>
+					</li>
+				{{/listings}}
+			</ul>
+		</div>
+		<a href="/"><h2>Return Home</h2></a>
+	</div>
 </body>
 </html>

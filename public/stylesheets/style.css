@@ -1,3 +1,4 @@
+/*general styling*/
 body {
   padding: 0px;
   margin: 0px;
@@ -6,42 +7,168 @@ body {
   box-sizing: border-box;
 }
 
-li{
-	list-style: none
+*,*:before,*:after{box-sizing: inherit}
+
+li{list-style: none}
+
+ul{padding: 0 10px 0 10px}
+
+a{
+	text-decoration: none;
+	color: #559
 }
-ul{
-	padding: 0 0 0 10px;
+
+a:hover {
+	text-decoration: underline;
+	color: #337;
 }
-.pageContainer{
-	padding: 25px 75px;
+
+input, textarea, select {
+	outline: none
 }
+
+.pageContainer{padding: 15px 50px}
+
 .flex{
 	display: flex;
 	flex-flow: row wrap;
 }
+
+
+footer{
+	clear: both;
+	border-top: 1px solid #ccc;
+}
+
+/*home page*/
+.pageName {
+	font-size: 34px;
+	text-align: center;
+	border-bottom: 1px solid #ddd;
+	padding: 0 5px;
+	margin: 0 0 10px 0;
+	background-color: #eee
+}
+
+#leftBar{
+	float:left;
+	width: 150px;
+	min-height: 500px;
+	background-color: #eee;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+	text-align: center;
+}
+
+#leftBar li {
+	margin: 3px 0;
+}
+#rightBar{
+	float:right;
+	width: 125px;
+	min-height: 500px;
+	background-color: #eee;
+	border-left: 1px solid #ddd;
+	border-right: 1px solid #ddd;
+}
+
+.mainContent {
+	padding: 0 15px;
+}
 .categoryContainer {
-	margin: 5px;
-	width: 28%;
+	margin: 5px 10px;
+	width: 30%;
+	min-width: 235px;
 	border: .5px solid #ccc;
 }
 .mainCat{
 	font-size: 32px;
-	margin: 0 0 15px;
+	margin: 0 0 10px;
 	background-color: #ddd;
 	text-align: center;
 }
 .subCat{
-	font-size: 18px;
-}
-footer{
-	border-top: 1px solid black;
+	font-size: 17px;
+	border-bottom: 1px solid #ddd;
 }
 
+/*category page*/
+#views > *, #views > * > a {
+	display: inline-block;
+}
 
+#views a {
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
 
-/*view-listing*/
+#views a:hover {
+	background-color: #eee;
+}
 
+.cat-ul{
+	padding: 0 0 0 25px;
+}
+
+.listLink{
+	font-size: 16px;
+}
+
+.preview {
+	display: none
+}
+
+.thumbnail .preview{
+	display: initial;
+	max-width: 50px;
+	max-height: 50px;
+}
+
+.grid ul{
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+}
+
+.grid li{
+	margin: 10px;
+	flex: 1 1 0;
+
+}
+
+.grid .preview {
+	display: block;
+	max-width: 200px;
+	max-height: 200px;
+	margin-bottom: 10px;
+}
+
+/*view-listing page*/
 .listingPic {
-	max-height: 500px;
+	max-height: 400px;
 	max-width: 500px;
+}
+
+.listingNav > * {
+	float: left;
+	padding: 0 20px 0 0;
+}
+
+.listingDesc {
+	font-size: 18px
+}
+
+/*add-listing page*/
+#newListingForm > * {
+	display: block;
+	margin: 0 0 5px 25px;
+}
+
+#newListingForm > input[type='text'], #newListingForm > textarea {
+	padding:3px 5px;
+	width: 300px;
+}
+
+#newListingForm > textarea {
+	resize: vertical;
 }

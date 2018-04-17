@@ -3,24 +3,34 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
 </head>
 <body>
-	<form action="submit-listing" method="post" enctype="multipart/form-data">
-		<input type="text" name="title" id="newTitle" placeholder="title">
-		<textarea name="description" id="newDescription" placeholder="description"></textarea>
-		<select name="category">
-			{{#categories}}
-			<optgroup label="{{title}}">
-				{{#subcategories}}
-					<option value="{{id}}">{{title}}</option>
-				{{/subcategories}}
-			</optgroup>
-			{{/categories}}
-		</select>
-		<input type="file" name="listingImg" formenctype="multipart/form-data"/>
-		<button type="submit">Add Listing</button>
-	</form>
-	<a href="/">Home</a>
+	<h1 class="pageName">Add New Listing</h1>
+	<div class="pageContainer">
+		<h3>please limit each posting to a single area and category, once per 48 hours</h3>
+		<form id="newListingForm" action="submit-listing" method="post" enctype="multipart/form-data">
+			<input type="text" name="title" id="newTitle" placeholder="Listing Title">
+			<textarea name="description" id="newDescription" placeholder="Item Description"></textarea>
+			<input type="text" name="zipcode" placeholder="ZIP Code" maxlength="5" />
+			<input type="text" name="price" placeholder="Item Price" />
+			<div>
+				<select name="category">
+					{{#categories}}
+					<optgroup label="{{title}}">
+						{{#subcategories}}
+							<option value="{{id}}">{{title}}</option>
+						{{/subcategories}}
+					</optgroup>
+					{{/categories}}
+				</select>
+				<label>Select Category</label>
+			</div>
+			<input type="file" name="listingImg" formenctype="multipart/form-data"/>
+			<button type="submit">Post Listing</button>
+		</form>
+		<a href="/"><h2>Return Home</h2></a>
+	</div>
 </body>
 </html>

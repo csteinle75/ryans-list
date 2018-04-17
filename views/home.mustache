@@ -3,27 +3,39 @@
 <head>
 	<meta charset="UTF-8">
 	<title>{{title}}</title>
-	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css"/>
 </head>
 <body>
+	<h1 class="pageName">Ryan's List</h1>
 	<div class="pageContainer">
-	<h1 id="pageName">Ryan's List</h1>
-		<div class="mainContent flex">
-		{{#categories}}
-			<div class="categoryContainer">
-				<h2 class="mainCat"><a href="category/{{slug}}">{{title}}</a></h2>
-				<ul>
-				{{#subcategories}}
-					<li class="subCat"><a href="category/{{slug}}">{{title}}</a></li>
-				{{/subcategories}}
-				</ul>
-			</div>
-		{{/categories}}
+		<div id="leftBar">
+			<ul>
+				<a href="add-listing"><li>Add New Listing</li></a>
+				<a href="#"><li>Log In</li></a>
+				<a href="#"><li>FAQ</li></a>
+			</ul>
 		</div>
-		<a href="add-listing">add listing</a>
+		<div id="rightBar">
+			
+		</div>
+		<div class="mainContent flex">
+			{{#categories}}
+				<div class="categoryContainer">
+					<h2 class="mainCat"><a href="category/{{slug}}">{{title}}</a></h2>
+					<ul>
+					{{#subcategories}}
+						<li class="subCat"><a href="category/{{slug}}">{{title}}</a></li>
+					{{/subcategories}}
+					</ul>
+				</div>
+			{{/categories}}
+		</div>
+		
+		
 	</div>
 	<footer>
-		<div>footer</div>
+		<div>2018</div>
 	</footer>
 </body>
 </html>
