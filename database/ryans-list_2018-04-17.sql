@@ -7,7 +7,7 @@
 #
 # Host: localhost (MySQL 5.7.21)
 # Database: ryans-list
-# Generation Time: 2018-04-16 15:02:01 +0000
+# Generation Time: 2018-04-17 07:20:39 +0000
 # ************************************************************
 
 
@@ -43,19 +43,39 @@ VALUES
 	(1,'community',NULL,'community'),
 	(2,'services',NULL,'services'),
 	(3,'housing',NULL,'housing'),
-	(4,'for_sale',NULL,'for-sale'),
+	(4,'for sale',NULL,'for-sale'),
 	(5,'jobs',NULL,'jobs'),
 	(6,'activities',1,'activities'),
 	(7,'artists',1,'artists'),
 	(8,'automotive',2,'automotive'),
 	(9,'beauty',2,'beauty'),
 	(10,'apts/housing',3,'apts-housing'),
-	(11,'housing_swap',3,'housing-swap'),
+	(11,'housing swap',3,'housing-swap'),
 	(12,'antiques',4,'antiques'),
 	(13,'appliances',4,'appliances'),
 	(14,'accounting+finance',5,'accounting-finance'),
 	(15,'admin/office',5,'admin-office'),
-	(16,'parking/storage',3,'parking-storage');
+	(16,'parking/storage',3,'parking-storage'),
+	(17,'childcare',1,'childcare'),
+	(18,'classes',1,'classes'),
+	(19,'events',1,'events'),
+	(20,'general',1,'general'),
+	(21,'groups',1,'groups'),
+	(22,'local news',1,'local-news'),
+	(23,'lost+found',1,'lost-found'),
+	(24,'missed connections',1,'missed-connections'),
+	(25,'cell/mobile',2,'cell-mobile'),
+	(26,'computer',2,'computer'),
+	(27,'creative',2,'creative'),
+	(28,'cycle',2,'cycle'),
+	(29,'event',2,'event'),
+	(30,'farm+garden',2,'farm-garden'),
+	(31,'financial',2,'financial'),
+	(32,'housing wanted',3,'housing-wanted'),
+	(33,'office/commercial',3,'office-commercial'),
+	(34,'parking/storage',3,'parking-storage'),
+	(35,'real estate for sale',3,'real-estate-for-sale'),
+	(36,'rooms/shared',3,'rooms-shared');
 
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -70,7 +90,9 @@ CREATE TABLE `images` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `listing_id` int(11) unsigned DEFAULT NULL,
   `image_path` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `img-listing-fk` (`listing_id`),
+  CONSTRAINT `img-listing-fk` FOREIGN KEY (`listing_id`) REFERENCES `listings` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 LOCK TABLES `images` WRITE;
@@ -78,10 +100,16 @@ LOCK TABLES `images` WRITE;
 
 INSERT INTO `images` (`id`, `listing_id`, `image_path`)
 VALUES
-	(1,42,'/uploads/ea71a40599d994def003b92894337715'),
-	(2,43,'/uploads/b939f0a9c521e022eac9425f43639451'),
-	(3,44,'/uploads/36a304a589ada2ff5816b6e6c3c10237'),
-	(4,46,'/uploads/f08bde71cd495b438d6b819341db202a');
+	(1,1,'http://placehold.it/300/300'),
+	(2,2,'http://placehold.it/300/300'),
+	(3,3,'http://placehold.it/300/300'),
+	(4,4,'http://placehold.it/300/300'),
+	(5,5,'http://placehold.it/300/300'),
+	(6,6,'http://placehold.it/300/300'),
+	(7,7,'http://placehold.it/300/300'),
+	(8,8,'/uploads/d6b5de4bc4381897e14072a02559679d'),
+	(9,9,'http://placehold.it/300/300'),
+	(10,10,'/uploads/c9b9cf71f1135b207b0529cf333a588f');
 
 /*!40000 ALTER TABLE `images` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -97,6 +125,9 @@ CREATE TABLE `listings` (
   `title` text,
   `description` text,
   `category_id` int(11) unsigned DEFAULT NULL,
+  `date_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `price` float(13,2) DEFAULT NULL,
+  `zipcode` int(5) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `listing-cat-fk` (`category_id`),
   CONSTRAINT `listing-cat-fk` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
@@ -105,29 +136,18 @@ CREATE TABLE `listings` (
 LOCK TABLES `listings` WRITE;
 /*!40000 ALTER TABLE `listings` DISABLE KEYS */;
 
-INSERT INTO `listings` (`id`, `title`, `description`, `category_id`)
+INSERT INTO `listings` (`id`, `title`, `description`, `category_id`, `date_created`, `price`, `zipcode`)
 VALUES
-	(1,'some bs','this is an item, i\'ll sell it to you if you make it worth my while',6),
-	(2,'more crap','more crap for sale buy if you want',10),
-	(3,'big stupid thing','if you wanna look like a jerk, buy my big stupid thing',8),
-	(4,'new activity','ay u wanna buy something?',6),
-	(5,'jasdlfkj','09123049123',7),
-	(16,'4','1234',6),
-	(17,'j','trash',6),
-	(18,'czx','zxc',6),
-	(23,'test','test',6),
-	(24,'test2','test2',15),
-	(25,'another test','testing again',11),
-	(26,'crap','also crap',11),
-	(27,'encoding type test','jn',16),
-	(39,'limited offer for a item with a really long name','real good deal',6),
-	(40,'cz','ruff',6),
-	(41,'fd','fd',7),
-	(42,'upload test','this should upload and add to db',6),
-	(43,'f','f',6),
-	(44,'f','f',6),
-	(45,'f','fc',6),
-	(46,'demo listing','this listing will be used in testing',6);
+	(1,'all artists welcome','come do an art',7,'2018-04-16 16:45:44',0.00,NULL),
+	(2,'fun activity','cool thing',6,'2018-04-16 16:47:48',20.00,NULL),
+	(3,'asdf','asdf',6,'2018-04-16 23:50:34',200.00,NULL),
+	(4,'fdsa','fda',6,'2018-04-16 23:50:55',2.00,NULL),
+	(5,'upload test','testing upload features',6,'2018-04-16 23:59:17',4000.00,12345),
+	(6,'f','f',6,'2018-04-17 00:02:55',0.00,11234),
+	(7,'f','f',6,'2018-04-17 00:12:56',0.00,1),
+	(8,'f','f',6,'2018-04-17 00:14:06',0.00,1),
+	(9,'f','f',6,'2018-04-17 00:17:41',0.00,0),
+	(10,'new','new',6,'2018-04-17 00:18:19',0.00,0);
 
 /*!40000 ALTER TABLE `listings` ENABLE KEYS */;
 UNLOCK TABLES;
