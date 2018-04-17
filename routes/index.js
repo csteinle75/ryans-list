@@ -48,7 +48,7 @@ router.get('/category/:category/:view?', (req, res, next) =>{
 	`
 
 	conn.query(queryid, [req.params.category], (err, results, fields) =>{
-		console.log('category id:',results[0])
+		// console.log('category id:',results[0])
 		const catId = results[0].id
 		const catName = results[0].catname
 
@@ -65,7 +65,6 @@ router.get('/category/:category/:view?', (req, res, next) =>{
 		`
 
 		conn.query(querylistings, [catId, catId], (err2, results2, fields2) =>{
-			console.log(results2.map(result => {return {...result}}))
 
 			data = {
 				title: catName,
@@ -146,18 +145,19 @@ router.get('/add-listing', (req, res, next) =>{
 router.post('/submit-listing', upload.single('listingImg'), (req, res, next) =>{
 	// console.log('request:', req.body)
 	console.log('file', req.file)
+
 	const title = req.body.title
 	const description = req.body.description
 	const category = req.body.category
 	const listingImg = req.body.listingImg
-	const zipcode = req.body.zipcode
+	const zipcode = req.body.zipcode ? req.body.zipcode : 00000
 	let price
 	if (Number.isNaN(parseFloat(req.body.price))){
 		price = 0
 	} else {price = parseFloat(req.body.price)}
 
 	let imgpath
-	if (!req.file === undefined){
+	if (req.file !== undefined){
 		imgpath = '/uploads/' + req.file.filename
 	} else {imgpath = 'http://placehold.it/300/300'}
 
